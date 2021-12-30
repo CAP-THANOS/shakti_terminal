@@ -1,0 +1,191 @@
+#include<iostream>
+#include<cstring>
+#include<ctime>
+#include<iomanip>
+#include<direct.h>
+#include<fstream>
+
+using namespace std;
+
+void welcome_Screen(void);
+void help(void);
+void command(string);
+void create(string);
+void append(string);
+void remove_file(char[]);
+void view(string);
+void os_name(void);
+void create_Dir(char[]);
+void remove_Dir(char[]);
+void date(void);
+void time(void);
+void date_time(void);
+
+int main(){
+
+    cout<<"--[- SHAKTI TERMINAL -]--\n\n";
+    date_time();
+    cout<<"Type \"help\" for SHAKTI commands\n";
+
+    cout<<"\n--[- ";
+
+
+    // ifstream fin("inputs.txt",ios::in);
+    
+    string input;
+    cin>>input; // getline(cin,input);
+    
+    if(input=="exit") exit(0);
+    // while(!fin.eof()){
+    //     string s1;
+    //     fin>>s1;
+    //     if(s1==input){
+    //         cout<<"input:"<<input<<" okay\n";
+    //         fin.seekg(0);
+            command(input);
+            // cin.seekg(0);
+        // }
+    // }
+}
+void help(){
+    cout<<"\t\t--[- SHAKTI TERMINAL COMMANDS -]--\n";
+    cout<<"hello"<<setw(25)<<"prints hello world\n";
+    cout<<"stscr"<<setw(25)<<"displays welcome screen\n";
+    cout<<"create"<<setw(23)<<"creates a new file"<<endl;
+    cout<<"append"<<setw(41)<<"appends content to an existing file\n";
+    cout<<"remove"<<setw(22)<<"removes the file\n";
+    cout<<"view"<<setw(25)<<"reads from a file\n";
+    cout<<"os"<<setw(30)<<"software information\n";
+    cout<<"mkdir"<<setw(30)<<"creates a new directory\n";
+    cout<<"rmdir"<<setw(36)<<"removes an existing directory\n";
+    cout<<"clear"<<setw(33)<<"clears the terminal screen\n";
+    cout<<"exit"<<setw(30)<<"exit from the Terminal\n";
+    cout<<"date"<<setw(26)<<"shows current date\n";
+    cout<<"time"<<setw(26)<<"shows current time\n";
+    cout<<"datetime"<<setw(31)<<"shows current date and time\n";
+}
+void welcome_Screen(){
+    cout<<string(22,'\n');
+    cout<<"--[- SHAKTI TERMINAL -]--\n\n";
+    date_time();
+    cout<<"Type \"help\" for SHAKTI commands\n";
+}
+void command(string cmd){
+    if(cmd=="hello") cout<<"Hello, world!!";
+    else if(cmd=="help") help();
+    else if(cmd=="os") os_name();
+    else if(cmd=="datetime") date_time();
+    else if(cmd=="date") date();
+    else if(cmd=="time") time();
+    else if(cmd=="stscr") welcome_Screen();
+    else if(cmd=="clear"){cout<<string(22,'\n');}
+    else if(cmd=="create"){
+        string filename; cin>>filename;
+        create(filename);
+    }
+    else if(cmd=="append"){
+        string filename; cin>>filename;
+        append(filename);
+    }
+    else if(cmd=="remove"){
+        char filename[20]; cin>>filename;
+        remove_file(filename);
+    }
+    else if(cmd=="view"){
+        string filename; cin>>filename;
+        view(filename);
+    }
+    else if(cmd=="mkdir"||"rmdir"){
+        char dirname[15]; cin>>dirname;
+        if(cmd=="mkdir") {create_Dir(dirname);}
+        else {remove_Dir(dirname);}
+    }
+}
+void create(string name){
+    ofstream fout(name,ios::out);
+    if(!fout.is_open()){
+        cerr<<"Error: "<<strerror(errno); return;
+    }
+    cout<<"Write->\t(~ to stop)\n";
+    char ch;
+    cin.ignore();
+        while(fout){
+        cin.get(ch);
+        if(ch=='~') break;
+        fout<<ch;
+    }
+    fout.close();
+}
+void append(string name){
+    ofstream fout(name,ios::app);
+    if(!fout.is_open()){
+        cerr<<"Error: "<<strerror(errno); return;
+    }
+    cout<<"Append->\t(~ to stop)\n";
+    char ch;
+    cin.ignore();
+    while(fout){
+        cin.get(ch);
+        if(ch=='~') break;
+        fout<<ch;
+    }
+    fout.close();
+}
+void remove_file(char name[]){
+    // fstream file(name);
+    // if(!file.is_open()){
+    //     cerr<<"Error: "<<strerror(errno); return;
+    // }
+    int m=remove(name);
+    if(m==1) cout<<"Error: "<<strerror(errno); return;
+}
+void view(string name){
+    ifstream fin(name,ios::in);
+    if(!fin){
+        cerr<<"Error: "<<strerror(errno); return;
+    }
+    char c;
+    while(!fin.eof()){
+        fin.get(c);
+        cout<<c;
+    }
+    fin.close();
+}
+void os_name(){
+    cout<<"    ^          _   /_\\\n";
+    cout<<"^   |   ^     ( )_ | |\n";
+    cout<<"|   |   |      / /\\| |\n";
+    cout<<"---------     / /  | |\n";
+    cout<<"    |    _     _     ___ o\n";
+    cout<<"    |   ( |_| /_\\ |/  |  |\n";
+    cout<<"    |   _)| |/   \\|\\  |  |\n";
+    cout<<"    |\n";
+}
+void create_Dir(char name[]){
+    int check=mkdir(name);
+    if(check) {cerr<<"Error: "<<strerror(errno); return;}
+}
+void remove_Dir(char name[]){
+    int check=rmdir(name);
+    if(check) {cerr<<"Error: "<<strerror(errno); return;}
+}
+void date(){
+    time_t curr_date;
+    curr_date=time(NULL);
+    tm *date=localtime(&curr_date);
+    char date_str[15];
+    strftime(date_str,15,"%b %d %Y",date);
+    cout<<date_str;
+}
+void time(){
+    time_t curr_time;
+    curr_time=time(NULL);
+    tm *time=localtime(&curr_time);
+    cout<<time->tm_hour<<":"<<time->tm_min<<":"<<time->tm_sec;
+}
+void date_time(){
+    time_t dt;
+    dt=time(NULL);
+    char *datetime=ctime(&dt);
+    cout<<datetime;
+}
