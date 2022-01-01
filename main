@@ -26,26 +26,13 @@ int main(){
     cout<<"--[- SHAKTI TERMINAL -]--\n\n";
     date_time();
     cout<<"Type \"help\" for SHAKTI commands\n";
-
-    cout<<"\n--[- ";
-
-
-    // ifstream fin("inputs.txt",ios::in);
-    
-    string input;
-    cin>>input; // getline(cin,input);
-    
-    if(input=="exit") exit(0);
-    // while(!fin.eof()){
-    //     string s1;
-    //     fin>>s1;
-    //     if(s1==input){
-    //         cout<<"input:"<<input<<" okay\n";
-    //         fin.seekg(0);
-            command(input);
-            // cin.seekg(0);
-        // }
-    // }
+    while(true){
+        cout<<"\n--[- ";
+        string input;
+        cin>>input; // getline(cin,input);
+        if(input=="exit") exit(0);
+        command(input);
+   }
 }
 void help(){
     cout<<"\t\t--[- SHAKTI TERMINAL COMMANDS -]--\n";
@@ -132,10 +119,10 @@ void append(string name){
     fout.close();
 }
 void remove_file(char name[]){
-    // fstream file(name);
-    // if(!file.is_open()){
-    //     cerr<<"Error: "<<strerror(errno); return;
-    // }
+    fstream file(name);
+    if(!file.is_open()){
+        cerr<<"Error: "<<strerror(errno); return;
+    }
     int m=remove(name);
     if(m==1) cout<<"Error: "<<strerror(errno); return;
 }
